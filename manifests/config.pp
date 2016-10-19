@@ -102,18 +102,20 @@ class cachet::config inherits cachet {
 #    subscribe   => Exec['Artisan Install Cachet Application'],
 #  }
 
-  apache::vhost { 'cachet':
-    port        => $cachet::vhost_port,
-    servername  => $cachet::vhost_servername,
-    docroot     => "${cachet::install_path}/public",
-    directories => [
-      {
-        path           => "${cachet::install_path}/public",
-        options        => [ 'Indexes FollowSymLinks' ],
-        allow_override => [ 'All' ],
-        #Apache 2.4 ONLY !! - auth_require   => 'all granted',
-      },
-    ],
+  if ($cachet::setup_vhost) {
+    apache::vhost { 'cachet':
+      port        => $cachet::vhost_port,
+      servername  => $cachet::vhost_servername,
+      docroot     => "${cachet::install_path}/public",
+      directories => [
+        {
+          path           => "${cachet::install_path}/public",
+          options        => [ 'Indexes FollowSymLinks' ],
+          allow_override => [ 'All' ],
+          #Apache 2.4 ONLY !! - auth_require   => 'all granted',
+        },
+      ],
+    }
   }
 
   if ($cachet::setup_db) {

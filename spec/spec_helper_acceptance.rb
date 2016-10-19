@@ -35,10 +35,14 @@ RSpec.configure do |c|
          
       # Auto Dependencies
       # on host, puppet('module','install','puppetlabs/concat'),    { :acceptable_exit_codes => [0,1] }
-      # on host, puppet('module','install','puppetlabs/stdlib'),    { :acceptable_exit_codes => [0,1] }  
-    end
+      # on host, puppet('module','install','puppetlabs/stdlib'),    { :acceptable_exit_codes => [0,1] }
 
-    # Install this module
-    puppet_module_install(:source => proj_root, :module_name => 'cachet')
+      # Install this module
+      install_dev_puppet_module_on(host, {
+        :source             => proj_root, 
+        :target_module_path => '/etc/puppetlabs/code/modules/',
+        :module_name        => 'cachet'
+      })  
+    end
   end  
 end

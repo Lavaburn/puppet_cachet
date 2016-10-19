@@ -2,6 +2,53 @@
 #
 # This module manages Cachet
 #
+# It can install the webapp, configure and set it up for API config.
+#
+# Parameters:
+#   * application_key (string): Random Application Key (used for DB encryption) [REQUIRED]
+#   * db_password (string): Database password [REQUIRED]
+#   * admin_username (string): Username for the initial Administrator [REQUIRED]
+#   * admin_password (string): Password for the initial Administrator (BLOWFISH hash - $2y$) [REQUIRED]
+#   * admin_email (string): E-mail address for the initial Administrator[REQUIRED]
+#   * admin_api_key (string): API key for the initial Administrator (used by Puppet Custom Types) [REQUIRED]
+#   * setup_apache (boolean): Whether to install Apache. Default = false
+#   * setup_git (boolean): Whether to install Git. Default = false
+#   * setup_mysql (boolean): Whether to install MySQL. Default = false
+#   * setup_php (boolean): Whether to install PHP. Default = false
+#   * setup_composer (boolean): Whether to install Composer. Default = false
+#   * setup_redis (boolean): Whether to install Redis. Default = false
+#   * setup_supervisord (boolean): Whether to install Supervisor. Default = false
+#   * install_path (absolute path): See Params
+#   * git_repo (string): See Params
+#   * version (string): See Params
+#   * queue_driver (string): See Params
+#   * cache_driver (string): See Params
+#   * session_driver (string): See Params
+#   * queue_worker (string): See Params
+#   * app_name (string): See Params
+#   * app_timezone (string): See Params
+#   * app_locale (string): See Params
+#   * app_show_support (numeric): See Params
+#   * app_incident_days (numeric): See Params
+#   * setup_db: Whether to setup MySQL DB. Default = true
+#   * db_driver (string): See Params
+#   * db_hostname (string): See Params
+#   * db_username (string): See Params
+#   * db_name (string): See Params
+#   * redis_hostname (string): See Params
+#   * redis_db (numeric): See Params
+#   * redis_port (numeric): See Params
+#   * setup_vhost: Whether to setup Apache vhost. Default = true
+#   * vhost_servername: Server hostname (Vhost name). Default = $::fqdn
+#   * vhost_port (numeric): See Params
+#   * smtp_hostname (string): See Params
+#   * smtp_port (numeric): See Params
+#   * smtp_username (string): See Params
+#   * smtp_password (string): See Params
+#   * smtp_address (string): See Params
+#   * smtp_name (string): See Params
+#   * smtp_encryption (string): See Params
+#
 class cachet (
   # Required Parameters
   $application_key,
@@ -9,19 +56,17 @@ class cachet (
 
   # Admin User
   $admin_username,
-  $admin_password,  # $2y$10$46SXyriJEefnrrcoUx0iuuF2Msxf1aT6ThAZAxUVvHAoms9w9akDW
+  $admin_password,
   $admin_email,
   $admin_api_key,
 
-  # TODO - default to false
-  $setup_apache      = true,
-  $setup_git         = true,
-  $setup_mysql       = true,
-  $setup_php         = true,
-  $setup_composer    = true,
-  $setup_redis       = true,
-  $setup_supervisord = true,
-  # END TODO
+  $setup_apache      = false,
+  $setup_git         = false,
+  $setup_mysql       = false,
+  $setup_php         = false,
+  $setup_composer    = false,
+  $setup_redis       = false,
+  $setup_supervisord = false,
 
   $install_path = $::cachet::params::install_path,
   $git_repo     = $::cachet::params::git_repo,
@@ -74,10 +119,8 @@ class cachet (
   contain 'cachet::install'
   contain 'cachet::config'
   contain 'cachet::setup'
-
-  # api: XXX/api/v1/
-  # Integration: /api/v1/ping => pong
+  contain 'cachet::api'
 
   # Ordering
-  Class['cachet::install'] -> Class['cachet::config'] -> Class['cachet::setup']
+  Class['cachet::install'] -> Class['cachet::config'] -> Class['cachet::setup'] -> Class['cachet::api']
 }

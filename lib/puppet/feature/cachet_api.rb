@@ -1,0 +1,1 @@
+Puppet.features.add(:cachet_api, :libs => ["cachet"])

@@ -1,6 +1,8 @@
 require 'spec_helper_acceptance'
 
 describe 'cachet class' do
+  #before { skip("Not testing this anymore") }
+    
 	describe 'default install' do
   	it 'should work idempotently with no errors' do
   		pp = <<-EOS
