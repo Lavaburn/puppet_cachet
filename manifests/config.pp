@@ -44,6 +44,7 @@ class cachet::config inherits cachet {
     refreshonly => true,
     subscribe   => Vcsrepo[$cachet::install_path],
     require     => Class['php::extension::gd'],
+    timeout     => '1800',
   }
 
   exec { 'Composer add REDIS dependency':
