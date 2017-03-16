@@ -22,7 +22,7 @@ This module depends on some standard libraries to configure and set up Cachet:
 - puppetlabs/vcsrepo
 
 Optionally, you can use a number of modules to set up the complete stack:
-- nodes/php
+- puppet/php
 - thomasvandoren/redis
 - puppetlabs/mysql
 - puppetlabs/apache

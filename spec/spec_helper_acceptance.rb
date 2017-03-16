@@ -25,7 +25,7 @@ RSpec.configure do |c|
         on host, 'apt-get install augeas-lenses'        
       end      
       
-      on host, puppet('module','install','nodes/php'),            { :acceptable_exit_codes => [0,1] } 
+      on host, puppet('module','install','puppet/php'),           { :acceptable_exit_codes => [0,1] } 
       on host, puppet('module','install','thomasvandoren/redis'), { :acceptable_exit_codes => [0,1] }
       on host, puppet('module','install','puppetlabs/mysql'),     { :acceptable_exit_codes => [0,1] }        
       on host, puppet('module','install','puppetlabs/apache'),    { :acceptable_exit_codes => [0,1] }    

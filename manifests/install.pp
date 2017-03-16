@@ -5,26 +5,36 @@
 class cachet::install inherits cachet {
   if ($cachet::setup_apache) {
     class { '::apache':
-      mpm_module => 'prefork',
+      mpm_module => 'worker',
     }
 
-    class { '::apache::mod::php': }
+    class { '::apache::mod::actions': }
     class { '::apache::mod::rewrite': }
-  }
 
-  #check/enforce PHP >= 5.5.9 ??
-  if ($cachet::setup_php) {
-    include '::php'
-    include '::php::apache'
+    apache::fastcgi::server { 'php':
+      host       => '127.0.0.1:9000',
+      timeout    => 60,
+      flush      => false,
+      faux_path  => '/var/www/php.fcgi',
+      fcgi_alias => '/php.fcgi',
+      file_type  => 'application/x-httpd-php'
+    }
 
-    class { 'php::extension::gd':
-      ensure => 'installed',
+    apache::custom_config { 'php_type':
+      ensure  => 'present',
+      content => 'AddType application/x-httpd-php .php',
     }
   }
 
-  if ($cachet::setup_composer) {
-    include '::php::cli'
-    include '::php::composer'
+  if ($cachet::setup_php) {
+    class { '::php':
+      ensure     => 'present',
+      composer   => $cachet::setup_composer,
+      fpm        => true,
+      extensions => {
+        'gd' => {}
+      },
+    }
   }
 
   if ($cachet::setup_redis) {

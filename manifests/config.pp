@@ -43,7 +43,6 @@ class cachet::config inherits cachet {
     environment => ['HOME=/root', 'COMPOSER_HOME=/usr/local/bin'],
     refreshonly => true,
     subscribe   => Vcsrepo[$cachet::install_path],
-    require     => Class['php::extension::gd'],
     timeout     => '1800',
   }
 
